@@ -2,10 +2,9 @@
 
 from oaktree.common import UniversalWriter
 
-class XmlProxy() :
-	def __init__(self, indent='\t', standalone="no", fragment=False, stylesheet=None) :
+class Html5Proxy() :
+	def __init__(self, indent='\t', fragment=False, stylesheet=None) :
 		self.indent = indent
-		self.standalone = standalone
 		self.fragment = fragment
 		self.stylesheet = None
 
@@ -15,9 +14,10 @@ class XmlProxy() :
 		self.uwriter = UniversalWriter(output)
 		w = self.uwriter.open()
 		if not self.fragment :
-			w(f'<?xml version="1.0" encoding="UTF-8" standalone="{self.standalone}"?>\n')
+			w(f'<!DOCTYPE html>\n')
 		self._compose(tree, w, self.indent)
-		return self.uwriter.close()
+		if output is None :
+			return self.uwriter.close()
 
 	def _compose(self, node, w, indent, depth=0) :
 		s = list()
@@ -30,7 +30,9 @@ class XmlProxy() :
 			s.append(f'id="{node.ident}"')
 		# style
 		if node.style :
+			print(node.tag, node.style)
 			s.append('class="{0}"'.format(','.join(node.style)))
+			print(s)
 		# pos is not used in xml
 		# nam
 		for k in node.nam :
@@ -63,5 +65,5 @@ if __name__ == '__main__' :
 	g.grow('tata')
 	g.add_text("vouzavé dit bizarre")
 
-	x = XmlProxy()
+	x = Html5Proxy()
 	print(x.save(u))
