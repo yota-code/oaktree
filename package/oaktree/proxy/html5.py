@@ -1,4 +1,4 @@
-#!/usr/bin/env pyton3
+#!/usr/bin/env python3
 
 from oaktree.common import UniversalWriter
 
@@ -18,16 +18,6 @@ class Html5Proxy() :
 			self.compose(tree, w)
 		return uw.output
 
-
-
-		# self.uwriter = UniversalWriter(output)
-		# w = self.uwriter.open()
-		# if not self.fragment :
-		# 	w(f'<!DOCTYPE html>\n')
-		# self._compose(tree, w, self.indent)
-		# if output is None :
-		# 	return self.uwriter.close()
-
 	def compose(self, node, w, depth=0) :
 		s = list()
 		# tag
@@ -39,9 +29,7 @@ class Html5Proxy() :
 			s.append(f'id="{node.ident}"')
 		# style
 		if node.style :
-			print(node.tag, node.style)
 			s.append('class="{0}"'.format(','.join(node.style)))
-			print(s)
 		# pos is not used in xml
 		# nam
 		for k in node.nam :
