@@ -127,8 +127,8 @@ class Leaf() :
 	def add_text(self, txt) :
 		""" append a string to the Leaf, return self """
 		if isinstance(txt, str) :
-			if txt.strip() != '' :
-				self.sub.append(txt)
+			#if txt.strip() != '' :
+			self.sub.append(txt)
 		else :
 			raise ValueError("append(): first argument must be a string")
 		return self

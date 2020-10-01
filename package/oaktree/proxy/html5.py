@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import oaktree
 from oaktree.common import UniversalWriter
 
 class Html5Proxy() :
@@ -45,10 +46,11 @@ class Html5Proxy() :
 		w(i + '<' + ' '.join(s) + ('>' if node.sub else ' />') + n)
 
 		for k in node.sub :
-			if isinstance(k, str) :
-				w(k.replace('\n', '\\n') + n)
-			else :
+			if isinstance(k, oaktree.Leaf) :
 				self.compose(k, w, depth+1)
+			else :
+				w(str(k) + n)
+
 		if node.sub :
 			w(f'{i}</{t}>{n}')
 

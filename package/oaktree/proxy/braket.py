@@ -21,7 +21,7 @@ class BraketProxy() :
 				self.compose(k, w, d+1)
 			else :
 				txt = k.replace('\t', '\\t').replace('\n', '\\n')
-				w(f'{self.indent * (d+1)}{txt}\n')
+				w(f'{self.indent * (d+1)}{repr(txt)}\n')
 		w(f'{self.indent * d}>\n')
 
 	def _compose_header(self, n, w, d) :
