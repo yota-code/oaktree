@@ -7,7 +7,6 @@ from cc_pathlib import Path
 class UniversalWriter() :
 	"""
 	behave differently depending on the output parameter given
-
 		output is None : open a io.String() ou io.Bytes()
 		output is a Path : open the file in 'wt' or 'wb' mode
 		else : out must have a write() method
@@ -37,19 +36,19 @@ class UniversalWriter() :
 		return self.fid.write
 
 	def close(self) :
+		# when we exit the context, if the object is still defined, we can still access to self.output
 		if self.output is None :
 			self.output = self.fid.getvalue()
-			return self.output
 		elif isinstance(self.output, list) :
-			return '\n'.join(stack)
+			self.output = '\n'.join(self.output)
 		else :
-			pass
+			self.fid.close()
 
 	def __enter__(self) :
 		return self, self.open()
 
 	def __exit__(self, exc_type, exc_value, traceback) :
-		return self.close()
+		self.close()
 
 if __name__ == '__main__' :
 
@@ -67,4 +66,3 @@ if __name__ == '__main__' :
 	with UniversalWriter() as (u, w) :
 		w("toto\n")
 	print(u.fid.getvalue())
-	

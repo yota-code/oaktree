@@ -9,8 +9,10 @@ class BraketProxy() :
 		self.indent = indent
 
 	def save(self, tree, output=None) :
-		with UniversalWriter(output) as (u, w) :
+		uw = UniversalWriter(output)
+		with uw as (u, w) :
 			self.compose(tree, w)
+		return uw.output
 
 	def compose(self, n, w, d=0) :
 		self._compose_header(n, w, d)

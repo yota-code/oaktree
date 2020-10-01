@@ -2,7 +2,7 @@
 
 from oaktree.common import UniversalWriter
 
-class XmlProxy() :
+class Html5Proxy() :
 	def __init__(self, indent='\t', standalone="no", fragment=False, stylesheet=None) :
 		self.indent = indent
 		self.standalone = standalone
@@ -12,14 +12,24 @@ class XmlProxy() :
 		self.fid = None
 
 	def save(self, tree, output=None) :
-		self.uwriter = UniversalWriter(output)
-		w = self.uwriter.open()
-		if not self.fragment :
-			w(f'<?xml version="1.0" encoding="UTF-8" standalone="{self.standalone}"?>\n')
-		self._compose(tree, w, self.indent)
-		return self.uwriter.close()
+		uw = UniversalWriter(output)
+		with uw as (u, w) :
+			if not self.fragment :
+				w(f'<!DOCTYPE html>\n')
+			self.compose(tree, w)
+		return uw.output
 
-	def _compose(self, node, w, indent, depth=0) :
+
+
+		# self.uwriter = UniversalWriter(output)
+		# w = self.uwriter.open()
+		# if not self.fragment :
+		# 	w(f'<!DOCTYPE html>\n')
+		# self._compose(tree, w, self.indent)
+		# if output is None :
+		# 	return self.uwriter.close()
+
+	def compose(self, node, w, depth=0) :
 		s = list()
 		# tag
 		t = f"{node.space}:" if node.space else ''
@@ -47,9 +57,9 @@ class XmlProxy() :
 
 		for k in node.sub :
 			if isinstance(k, str) :
-				w(k + n)
+				w(k.replace('\n', '\\n') + n)
 			else :
-				self._compose(k, w, indent, depth+1)
+				self.compose(k, w, depth+1)
 		if node.sub :
 			w(f'{i}</{t}>{n}')
 
@@ -63,5 +73,5 @@ if __name__ == '__main__' :
 	g.grow('tata')
 	g.add_text("vouzavé dit bizarre")
 
-	x = XmlProxy()
+	x = Html5Proxy()
 	print(x.save(u))
