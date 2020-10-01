@@ -27,6 +27,12 @@ class Leaf() :
 
 		self.sub = list()
 		self.parent = None
+
+	def parent_n(self, n=1) :
+		if n == 1 :
+			return self.parent
+		else :
+			return self.parent.parent_n(n-1)
 		
 	def __str__(self) :
 		return f"<{self.tag}>"

@@ -20,7 +20,8 @@ class BraketProxy() :
 			if isinstance(k, oaktree.Leaf) :
 				self.compose(k, w, d+1)
 			else :
-				w(f'{self.indent * (d+1)}{k}\n')
+				txt = k.replace('\t', '\\t').replace('\n', '\\n')
+				w(f'{self.indent * (d+1)}{txt}\n')
 		w(f'{self.indent * d}>\n')
 
 	def _compose_header(self, n, w, d) :

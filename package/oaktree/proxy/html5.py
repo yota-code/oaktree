@@ -3,9 +3,8 @@
 from oaktree.common import UniversalWriter
 
 class Html5Proxy() :
-	def __init__(self, indent='\t', standalone="no", fragment=False, stylesheet=None) :
+	def __init__(self, indent='\t', fragment=False, stylesheet=None) :
 		self.indent = indent
-		self.standalone = standalone
 		self.fragment = fragment
 		self.stylesheet = None
 
@@ -40,7 +39,9 @@ class Html5Proxy() :
 			s.append(f'id="{node.ident}"')
 		# style
 		if node.style :
+			print(node.tag, node.style)
 			s.append('class="{0}"'.format(','.join(node.style)))
+			print(s)
 		# pos is not used in xml
 		# nam
 		for k in node.nam :
