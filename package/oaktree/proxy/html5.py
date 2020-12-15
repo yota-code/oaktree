@@ -30,7 +30,7 @@ class Html5Proxy() :
 			s.append(f'id="{node.ident}"')
 		# style
 		if node.style :
-			s.append('class="{0}"'.format(','.join(node.style)))
+			s.append('class="{0}"'.format(' '.join(node.style)))
 		# pos is not used in xml
 		# nam
 		for k in node.nam :
