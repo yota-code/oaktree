@@ -19,9 +19,12 @@ class BraketProxy() :
 		for k in n.sub :
 			if isinstance(k, oaktree.Leaf) :
 				self.compose(k, w, d+1)
-			else :
+			elif isinstance(k, str) :
 				txt = k.replace('\t', '\\t').replace('\n', '\\n')
 				w(f'{self.indent * (d+1)}{repr(txt)}\n')
+			else :
+				w(f'!!! {k}')
+				#raise ValueError(f'{k} {type(k)}')
 		w(f'{self.indent * d}>\n')
 
 	def _compose_header(self, n, w, d) :
@@ -32,7 +35,7 @@ class BraketProxy() :
 		for k in sorted(n.nam) :
 			stack.append(f'{k}{{{n.nam[k]}}}')
 		for k in n.flag :
-			stack.append(f'{k}')
+			stack.append(f'!{k}')
 		for k in n.style :
 			stack.append(f'@{k}')
 		w(f'{self.indent * d}<{" ".join(stack)}|\n')

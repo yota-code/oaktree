@@ -8,7 +8,7 @@ def _walk_limit(start=None, stop=None, _depth=0) :
 
 class Leaf() :
 
-	def __init__(self, tag=None, ident=None, space=None, pos=None, nam=None, flag=None, style=None) :
+	def __init__(self, tag=None, ident=None, space=None, pos=None, nam=None, flag=None, style=None, parent=None) :
 
 		self.tag = tag
 		self.ident = ident
@@ -26,7 +26,9 @@ class Leaf() :
 		self.style = set(style) if style else set()
 
 		self.sub = list()
-		self.parent = None
+		self.parent = parent
+		if parent is not None :
+			parent.sub.append(self)
 
 	def parent_n(self, n=1) :
 		if n == 1 :
@@ -35,7 +37,7 @@ class Leaf() :
 			return self.parent.parent_n(n-1)
 		
 	def __str__(self) :
-		return f"<{self.tag}>"
+		return f"<{self.tag}#{self.ident}>"
 		
 	def __repr__(self) :
 		return f"<{self.tag}>"
@@ -77,9 +79,7 @@ class Leaf() :
 		for other in other_list :
 			if isinstance(other, Leaf) :
 				other.parent = self
-				self.sub.append(other)
-			else :
-				self.sub.append(other)
+			self.sub.append(other)
 		return other_list[0]
 
 	def grow(self, tag=None, ident=None, space=None, pos=None, nam=None, flag=None, style=None, cls=None) :
@@ -148,7 +148,7 @@ class Leaf() :
 
 	@property
 	def ancestor_lst(self) :
-		""" return a list of all ancestors up to the root """
+		""" return a list of all ancestors up to the root, including self"""
 		a_lst = list()
 		u = self
 
@@ -157,8 +157,26 @@ class Leaf() :
 			u = u.parent
 			a_lst.append(u)
 
-		return a_lst[::-1]
+		return list(reversed(a_lst))
 
-	def ancestor(self, depth) :
-		""" if depth is negatives is pick up """
-		pass
+	def ancestor(self, depth=0) :
+		depth = max(depth, 0)
+		u = self
+		for i in range(depth) :
+			if u.parent is None :
+				raise ValueError()
+			u = u.parent
+		return u
+
+	def header(self) :
+		stack = list()
+		stack.append(f'{"" if self.space is None else self.space + "."}{self.tag}{"" if self.ident is None else "#" + str(self.ident)}')
+		for k in self.pos :
+			stack.append(f'{{{k}}}')
+		for k in sorted(self.nam) :
+			stack.append(f'{k}{{{n.nam[k]}}}')
+		for k in self.flag :
+			stack.append(f'!{k}')
+		for k in self.style :
+			stack.append(f'@{k}')
+		return f'<{" ".join(stack)}|'
