@@ -43,6 +43,7 @@ class UniversalWriter() :
 			self.output = '\n'.join(self.output)
 		else :
 			self.fid.close()
+		return self.output
 
 	def __enter__(self) :
 		return self, self.open()

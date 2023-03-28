@@ -53,7 +53,6 @@ class XmlProxy() :
 		if node.sub :
 			w(f'{i}</{t}>{n}')
 
-
 if __name__ == '__main__' :
 	import oaktree
 
